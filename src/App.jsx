@@ -5,6 +5,7 @@ import Loader from "./components/loader";
 import ButtonHandler from "./components/btn-handler";
 import { detect } from "./utils/detect";
 import "./style/App.css";
+import CopyableTextArea from "./components/CopiableTextArea"
 
 const App = () => {
   const [loading, setLoading] = useState({ loading: true, progress: 0 }); // loading state
@@ -59,12 +60,12 @@ const App = () => {
       {loading.loading && <Loader>Loading model... {(loading.progress * 100).toFixed(2)}%</Loader>}
 
       <div className="header">
-        <h1>📷 YOLOv8 Live Detection App</h1>
+        <h1>🥗 Make ma a Recipie with AI 🍝</h1>
         <p>
-          YOLOv8 live detection application on browser powered by <code>tensorflow.js</code>
+          Detect the food on your fridge ❄️ or dispensery 🫙 and gather ideas on what you can prepare for dinner 💡
         </p>
         <p>
-          Serving : <code className="code">{modelName}</code>
+            This is running YOLOv8 detection on your browser powered by <code>tensorflow.js</code>
         </p>
       </div>
 
@@ -81,6 +82,9 @@ const App = () => {
         <p>
         {prompt}
         </p>
+      </div>
+      <div>
+      <CopyableTextArea text={prompt} />
       </div>
     </div>
   );

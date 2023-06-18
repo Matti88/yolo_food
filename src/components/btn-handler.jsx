@@ -36,6 +36,7 @@ const ButtonHandler = ({ imageRef, cameraRef, videoRef, detectCallback  }) => {
         ref={inputImageRef}
       />
       <button
+
         onClick={() => {
           // if not streaming
           if (streaming === null) inputImageRef.current.click();
@@ -44,7 +45,7 @@ const ButtonHandler = ({ imageRef, cameraRef, videoRef, detectCallback  }) => {
           else alert(`Can't handle more than 1 stream\nCurrently streaming : ${streaming}`); // if streaming video or webcam
         }}
       >
-        {streaming === "image" ? "Close" : "Open"} Image
+        {streaming === "image" ? "Reset" : "Load"} Image
       </button>
  
  
