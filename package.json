@@ -1,5 +1,5 @@
 {
-  "name": "yolov8-tfjs",
+  "name": "recipe-detector",
   "description": "Object detection application right in your browser using YOLOv8 and Tensorflow.js",
   "version": "1.0.0",
   "scripts": {
@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Hyuto/yolov8-tfjs.git"
+    "url": "git+https://github.com/Matti88/yolo_food.git"
   },
   "keywords": [
     "object detection",
@@ -21,10 +21,7 @@
   ],
   "author": "Wahyu Setianto",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/Hyuto/yolov8-tfjs/issues"
-  },
-  "homepage": "https://github.com/Hyuto/yolov8-tfjs#readme",
+  "homepage": "https://github.com/Matti88/yolo_food.git#readme",
   "dependencies": {
     "@tensorflow/tfjs": "^4.1.0",
     "normalize.css": "^8.0.1",

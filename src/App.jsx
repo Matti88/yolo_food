@@ -60,7 +60,7 @@ const App = () => {
       {loading.loading && <Loader>Loading model... {(loading.progress * 100).toFixed(2)}%</Loader>}
 
       <div className="header">
-        <h1>🥗 Make ma a Recipie with AI 🍝</h1>
+        <h1>🥗 Make ma a Recipe with AI 🍝</h1>
         <p>
           Detect the food on your fridge ❄️ or dispensery 🫙 and gather ideas on what you can prepare for dinner 💡
         </p>
