@@ -1,11 +1,6 @@
-# Object Detection using YOLOv8 and Tensorflow.js
+# YOLO Food
+## Object Detection using YOLOv8 and Tensorflow.js to create recipie prompts for ChatGPT
 
-<p align="center">
-  <img src="./sample.png" />
-</p>
-
-![love](https://img.shields.io/badge/Made%20with-🖤-white)
-![tensorflow.js](https://img.shields.io/badge/tensorflow.js-white?logo=tensorflow)
 
 ---
 
@@ -15,16 +10,16 @@ with `webgl` backend.
 **Setup**
 
 ```bash
-git clone https://github.com/Hyuto/yolov8-tfjs.git
-cd yolov8-tfjs
+git clone https://github.com/Matti88/yolo_food.git
+cd yolo_food
 yarn install #Install dependencies
 ```
 
 **Scripts**
 
 ```bash
-yarn start # Start dev server
-yarn build # Build for productions
+yarn start --host # Start dev server
+yarn build        # Build for productions
 ```
 
 ## Model
