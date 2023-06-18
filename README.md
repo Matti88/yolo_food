@@ -12,7 +12,7 @@ with `webgl` backend.
 The steps are the following:
 - First you select an Image to upload 📸
 - The AI model will generate a prompt for you 🧠
-- You can check, modify and copy to clipboard the prompt for ChatGPT for obtaining a custom recipies 🍱
+- You can check, modify and copy to clipboard the prompt for ChatGPT for obtaining a custom recipe 🍱
 - Last Step: prepare, enjoy and dont' waste food! ♻️
 
 
