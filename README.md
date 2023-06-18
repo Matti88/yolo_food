@@ -7,6 +7,19 @@
 Object Detection application right in your browser. Serving YOLOv8 in browser using tensorflow.js
 with `webgl` backend.
 
+
+## How it works
+The steps are the following:
+- First you select an Image to upload 📸
+- The AI model will generate a prompt for you 🧠
+- You can check, modify and copy to clipboard the prompt for ChatGPT for obtaining a custom recipies 🍱
+- Last Step: prepare, enjoy and dont' waste food! ♻️
+
+
+![How it works](public/HowITworks.png)
+
+
+
 **Setup**
 
 ```bash
