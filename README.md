@@ -1,4 +1,4 @@
-# YOLO Food
+# Recipie Detector
 ## Object Detection using YOLOv8 and Tensorflow.js to create recipie prompts for ChatGPT
 
 
