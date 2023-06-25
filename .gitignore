@@ -22,3 +22,10 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Removing Any type of model from the git
+*.onnx
+*.pt
+
+# Not sharing trained model
+yolov8n_saved_model
