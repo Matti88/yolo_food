@@ -1,9 +1,13 @@
 onnx_graphsurgeon==0.3.27
-nvidia-pyindex==1.0.9
-flax==0.6.2
-tensorflowjs==2.12.0
+numpy==1.23.4
 ultralytics==8.0.22
 pybind11>=2.4
+
+#necessary to export to tfjs in Mac
+onnx2tf>=1.7.7
+sng4onnx>=1.0.1
+tflite_support==latest
+numpy==1.23.4
 
 # Additional command for Matteo's Fedora OS
 # pip install --upgrade 'setuptools<42'
