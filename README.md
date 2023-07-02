@@ -78,3 +78,9 @@ Please update `src/utils/labels.json` with your new classes.
 
 - https://github.com/ultralytics/ultralytics
 - https://github.com/Hyuto/yolov8-onnxruntime-web
+
+## Installin Label Studio for Mac
+pip install label-studio          
+brew install postgresql     
+brew install postgis           
+pip install psycopg2
