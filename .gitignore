@@ -30,3 +30,5 @@ dist-ssr
 # Not sharing trained model
 yolov8n_saved_model
 yolov8n_web_model
+runs
+fridge_yolo
