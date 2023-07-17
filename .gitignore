@@ -31,3 +31,5 @@ dist-ssr
 yolov8n_saved_model
 yolov8n_web_model
 *.torchscript
+fridge_YOLO_2
+runs
