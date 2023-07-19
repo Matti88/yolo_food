@@ -5,7 +5,8 @@ import Loader from "./components/loader";
 import ButtonHandler from "./components/btn-handler";
 import { detect } from "./utils/detect";
 import "./style/App.css";
-import CopyableTextArea from "./components/CopiableTextArea"
+import CopyableTextArea from "./components/CopiableTextArea";
+import WhatsAppShareLink from "./components/WhatAppShareLink";
 
 const App = () => {
   const [loading, setLoading] = useState({ loading: true, progress: 0 }); // loading state
@@ -56,6 +57,7 @@ const App = () => {
   }, []);
 
   return (
+    <div>
     <div className="App">
       {loading.loading && <Loader>Loading model... {(loading.progress * 100).toFixed(2)}%</Loader>}
 
@@ -65,27 +67,37 @@ const App = () => {
           Detect the food on your fridge ❄️ or dispensery 🫙 and gather ideas on what you can prepare for dinner 💡
         </p>
         <p>
-            This is running YOLOv8 detection on your browser powered by <code>tensorflow.js</code>
+          This is running YOLOv8 detection on your browser powered by <code>tensorflow.js</code>
         </p>
       </div>
 
-      <div className="content">
-        <img
-          src="#"
-          ref={imageRef}
-          onLoad={() => detect(imageRef.current, model, canvasRef.current, detectCallback)}
-        />
-        <canvas width={model.inputShape[1]} height={model.inputShape[2]} ref={canvasRef} />
+      <div className="grid-container">
+        <div className="content">
+          <img
+            src="#"
+            ref={imageRef}
+            onLoad={() => detect(imageRef.current, model, canvasRef.current, detectCallback)}
+          />
+          <canvas width={model.inputShape[1]} height={model.inputShape[2]} ref={canvasRef} />
+        </div>
+
+        <div className="sidebar">
+          <div>
+          <ButtonHandler imageRef={imageRef} canvasRef={canvasRef} detectCallback={detectCallback} />
+          </div>        
+          <div>
+            <CopyableTextArea text={prompt} />
+          </div>
+          <div>
+            <WhatsAppShareLink text={prompt} />
+          </div>
+        </div>
       </div>
-      <ButtonHandler imageRef={imageRef} cameraRef={cameraRef} videoRef={videoRef} detectCallback={detectCallback} />
-      <div>
-        <p>
-        {prompt}
-        </p>
-      </div>
-      <div>
-      <CopyableTextArea text={prompt} />
-      </div>
+    </div>
+        <footer className="footer">
+        <p>Made for saving 💸 by Matteo Montanari and Marco Pelletta</p>
+        <p><a href="mailto:matteo.montanari25@gmail.com">Contact Us</a></p>
+        </footer>
     </div>
   );
 };

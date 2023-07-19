@@ -1,11 +1,8 @@
 import { useState, useRef } from "react";
-import { Webcam } from "../utils/webcam";
 
-const ButtonHandler = ({ imageRef, cameraRef, videoRef, detectCallback  }) => {
+const ButtonHandler = ({ imageRef, canvasRef, detectCallback  }) => {
   const [streaming, setStreaming] = useState(null); // streaming state
   const inputImageRef = useRef(null); // video input reference
-  const inputVideoRef = useRef(null); // video input reference
-  const webcam = new Webcam(); // webcam handler
 
   // closing image
   const closeImage = () => {
@@ -14,6 +11,13 @@ const ButtonHandler = ({ imageRef, cameraRef, videoRef, detectCallback  }) => {
     imageRef.current.src = "#"; // restore image source
     URL.revokeObjectURL(url); // revoke url
 
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+
+    // Clear the canvas by resetting its content to transparent
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    
     setStreaming(null); // set streaming to null
     inputImageRef.current.value = ""; // reset input image
     imageRef.current.style.display = "none"; // hide image
@@ -21,7 +25,7 @@ const ButtonHandler = ({ imageRef, cameraRef, videoRef, detectCallback  }) => {
 
 
   return (
-    <div className="btn-container">
+    <div >
       {/* Image Handler */}
       <input
         type="file"
@@ -36,6 +40,7 @@ const ButtonHandler = ({ imageRef, cameraRef, videoRef, detectCallback  }) => {
         ref={inputImageRef}
       />
       <button
+        className="btn-container"
 
         onClick={() => {
           // if not streaming

@@ -1,0 +1,21 @@
+/* Add this CSS to your existing styles or CSS file */
+.whatsapp-button {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px;
+    border: 1px solid #299e65; /* Adjust the border color as desired */
+    border-radius: 5px;
+    text-decoration: none;
+    color: #299e65; /* Adjust the text color as desired */
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  .whatsapp-button:hover {
+    background-color: #299e65; /* Adjust the hover background color as desired */
+    color: white; /* Adjust the hover text color as desired */
+  }
+  
+  .whatsapp-text {
+    margin-right: 8px;
+  }
+  
