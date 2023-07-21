@@ -11,30 +11,30 @@ function generateASCIITable(data) {
 
   // Calculate the maximum width of each column
   const columnWidths = {
-    Classes: "Ingredient".length,
+    Ingredient: "Ingredient".length,
     Count: "Count".length,
   };
 
   Object.entries(data).forEach(([className, count]) => {
-    columnWidths.Classes = Math.max(columnWidths.Classes, className.length);
+    columnWidths.Ingredient = Math.max(columnWidths.Ingredient, className.length);
     columnWidths.Count = Math.max(columnWidths.Count, String(count).length);
   });
 
   // Create the header row
-  const headerRow = `| ${"Classes".padEnd(columnWidths.Classes)} | ${"Count".padEnd(columnWidths.Count)} |\n`;
+  const headerRow = `| ${"Ingredient".padEnd(columnWidths.Ingredient)} | ${"Count".padEnd(columnWidths.Count)} |\n`;
 
   // Create the separator row
-  const separatorRow = `|${"-".repeat(columnWidths.Classes + 2)}|${"-".repeat(columnWidths.Count + 2)}|\n`;
+  const separatorRow = `|${"-".repeat(columnWidths.Ingredient + 2)}|${"-".repeat(columnWidths.Count + 2)}|\n`;
 
   // Create the data rows
   const dataRows = Object.entries(data).map(([className, count]) => {
-    const classNameCell = className.padEnd(columnWidths.Classes);
+    const classNameCell = className.padEnd(columnWidths.Ingredient);
     const countCell = String(count).padEnd(columnWidths.Count);
     return `| ${classNameCell} | ${countCell} |\n`;
   }).join("");
 
   // Create the bottom line
-  const bottomLine = `|${"-".repeat(columnWidths.Classes + 2)}|${"-".repeat(columnWidths.Count + 2)}|\n`;
+  const bottomLine = `|${"-".repeat(columnWidths.Ingredient + 2)}|${"-".repeat(columnWidths.Count + 2)}|\n`;
 
   // Combine all rows to form the table
   const asciiTable = bottomLine + headerRow + separatorRow + dataRows + bottomLine;
