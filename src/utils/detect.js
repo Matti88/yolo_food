@@ -2,8 +2,13 @@ import * as tf from "@tensorflow/tfjs";
 import { renderBoxes } from "./renderBox";
 import labels from "./labels.json";
 
+const numClass = labels.length;
 
-function generateASCIITable(data) {
+/**
+ * Render into an ASCII Table the data collected
+ * @param {Array} indexes  data classs in an array array
+ */
+export function generateASCIITable(data) {
   // Check if the input is an object
   if (typeof data !== "object" || data === null) {
     throw new Error("Input must be an object.");
@@ -42,9 +47,9 @@ function generateASCIITable(data) {
   return asciiTable;
 } 
 
-const numClass = labels.length;
+
 /**
- * Render prediction boxes
+ * Render the prompt of the prediction
  * @param {Array} classes_data class array
  */
 export const renderPrompt = (classes_data) => {
@@ -53,6 +58,35 @@ export const renderPrompt = (classes_data) => {
   chatGPTprompt += "```\n" + classes_data + "```";
   return chatGPTprompt;
 };
+
+/**
+ * Transform the data structure of the prediction into a dictionary
+ * @param {Array} classes_data class array
+ */
+export const transformPredictionToSummary = (classes_data) => {
+    // an oject with all the inventory of ingredients
+    const classes_to_count = {};
+    for (const code of classes_data) {
+      const name = labels[code];
+      classes_to_count[name] = (classes_to_count[name] || 0) + 1;
+    }
+    return classes_to_count;
+}
+
+export const renderFinalPromptCallback = (classesOfData) => {
+  if (classesOfData.length > 0) {
+    const first_level =  transformPredictionToSummary(classesOfData);
+    const second_level = generateASCIITable(first_level);
+    const third_level = renderPrompt(second_level);
+    return third_level;
+  } else {
+
+    return "";
+  }
+
+}
+
+
 
 
 /**
@@ -89,6 +123,10 @@ const preprocess = (source, modelWidth, modelHeight) => {
   return [input, xRatio, yRatio];
 };
 
+
+
+
+
 /**
  * Function run inference and do detection from source.
  * @param {HTMLImageElement|HTMLVideoElement} source
@@ -96,7 +134,7 @@ const preprocess = (source, modelWidth, modelHeight) => {
  * @param {HTMLCanvasElement} canvasRef canvas reference
  * @param {VoidFunction} callback function to run after detection process
  */
-export const detect = async (source, model, canvasRef, callback = () => {}) => {
+export const detect = async (source, model, canvasRef, callbacks = [] ) => {
 
   const [modelWidth, modelHeight] = model.inputShape.slice(1, 3); // get model width and height
 
@@ -135,19 +173,58 @@ export const detect = async (source, model, canvasRef, callback = () => {}) => {
   const classes_data = classes.gather(nms, 0).dataSync(); // indexing classes by nms index
 
   renderBoxes(canvasRef, boxes_data, scores_data, classes_data, [xRatio, yRatio]); // render boxes
+
+
+    // Execute all the callbacks with the filtered objects
+  callbacks.forEach((callback) => callback(classes_data, boxes_data, scores_data  ));
+
   tf.dispose([res, transRes, boxes, scores, classes, nms]); // clear memory
-
-  // an oject with all the inventory of ingredients
-  const classes_to_count = {};
-  for (const code of classes_data) {
-    const name = labels[code];
-    classes_to_count[name] = (classes_to_count[name] || 0) + 1;
-  }
-
-  callback(renderPrompt(generateASCIITable(classes_to_count)));
-
-
   tf.engine().endScope(); // end of scoping
 };
 
+/**
+ * Function to detect video from every source.
+ * @param {HTMLVideoElement} vidSource video source
+ * @param {tf.GraphModel} model loaded YOLOv8 tensorflow.js model
+ * @param {HTMLCanvasElement} canvasRef canvas reference
+ * @param {VoidFunction} callback function to run after detection process
+ */
+export const detectVideo = (vidSource, model, canvasRef, callback = () => {}) => {
+
+
+  /**
+   * Function to detect every frame from video
+   */
+  const detectFrame = async () => {
+    if (vidSource.videoWidth === 0 && vidSource.srcObject === null) {
+      const ctx = canvasRef.getContext("2d");
+      ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height); // clean canvas
+      return; // handle if source is closed
+    }
+
+    detect(vidSource, model, canvasRef, [
+                                          () => 
+                                            {
+                                              requestAnimationFrame(detectFrame)
+                                            },
+                                            callback
+      ]);
+  };
+
+  detectFrame(); // initialize to detect every frame
+};
+
+
+/**
+ * Function run inference and do detection from source.
+ * @param {HTMLImageElement|HTMLVideoElement} source
+ * @param {tf.GraphModel} model loaded YOLOv8 tensorflow.js model
+ * @param {HTMLCanvasElement} canvasRef canvas reference
+ * @param {VoidFunction} callback function to run after detection process
+ */
+export const detectImage = async (source, model, canvasRef, callback = () => {}) => {
+
+  detect(source, model, canvasRef, [callback] );
+
+};
 

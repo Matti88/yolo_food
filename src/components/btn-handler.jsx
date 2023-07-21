@@ -1,12 +1,12 @@
 import { useState, useRef } from "react";
 
-const ButtonHandler = ({ imageRef, canvasRef, detectCallback  }) => {
+const ButtonHandler = ({ imageRef, canvasRef, detectCallbackImage  }) => {
   const [streaming, setStreaming] = useState(null); // streaming state
   const inputImageRef = useRef(null); // video input reference
 
   // closing image
   const closeImage = () => {
-    detectCallback("");
+    detectCallbackImage("");
     const url = imageRef.current.src;
     imageRef.current.src = "#"; // restore image source
     URL.revokeObjectURL(url); // revoke url
