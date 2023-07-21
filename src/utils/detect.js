@@ -2,22 +2,55 @@ import * as tf from "@tensorflow/tfjs";
 import { renderBoxes } from "./renderBox";
 import labels from "./labels.json";
 
+
+function generateASCIITable(data) {
+  // Check if the input is an object
+  if (typeof data !== "object" || data === null) {
+    throw new Error("Input must be an object.");
+  }
+
+  // Calculate the maximum width of each column
+  const columnWidths = {
+    Classes: "Ingredient".length,
+    Count: "Count".length,
+  };
+
+  Object.entries(data).forEach(([className, count]) => {
+    columnWidths.Classes = Math.max(columnWidths.Classes, className.length);
+    columnWidths.Count = Math.max(columnWidths.Count, String(count).length);
+  });
+
+  // Create the header row
+  const headerRow = `| ${"Classes".padEnd(columnWidths.Classes)} | ${"Count".padEnd(columnWidths.Count)} |\n`;
+
+  // Create the separator row
+  const separatorRow = `|${"-".repeat(columnWidths.Classes + 2)}|${"-".repeat(columnWidths.Count + 2)}|\n`;
+
+  // Create the data rows
+  const dataRows = Object.entries(data).map(([className, count]) => {
+    const classNameCell = className.padEnd(columnWidths.Classes);
+    const countCell = String(count).padEnd(columnWidths.Count);
+    return `| ${classNameCell} | ${countCell} |\n`;
+  }).join("");
+
+  // Create the bottom line
+  const bottomLine = `|${"-".repeat(columnWidths.Classes + 2)}|${"-".repeat(columnWidths.Count + 2)}|\n`;
+
+  // Combine all rows to form the table
+  const asciiTable = bottomLine + headerRow + separatorRow + dataRows + bottomLine;
+
+  return asciiTable;
+} 
+
 const numClass = labels.length;
 /**
  * Render prediction boxes
  * @param {Array} classes_data class array
  */
 export const renderPrompt = (classes_data) => {
-  let chatGPTprompt = "Make a recipe with the following ingredients";
-
-  const distinctClasses = Array.from(new Set(classes_data)); // Get distinct values
-
-  for (let i = 0; i < distinctClasses.length; ++i) {
-    const klass = labels[distinctClasses[i]];
-    chatGPTprompt += `\n`;
-    chatGPTprompt += klass;
-  }
-  
+  let chatGPTprompt = "Make a recipe with the following ingredients";  
+  chatGPTprompt += `\n`;
+  chatGPTprompt += "```\n" + classes_data + "```";
   return chatGPTprompt;
 };
 
@@ -104,7 +137,14 @@ export const detect = async (source, model, canvasRef, callback = () => {}) => {
   renderBoxes(canvasRef, boxes_data, scores_data, classes_data, [xRatio, yRatio]); // render boxes
   tf.dispose([res, transRes, boxes, scores, classes, nms]); // clear memory
 
-  callback(renderPrompt(classes_data));
+  // an oject with all the inventory of ingredients
+  const classes_to_count = {};
+  for (const code of classes_data) {
+    const name = labels[code];
+    classes_to_count[name] = (classes_to_count[name] || 0) + 1;
+  }
+
+  callback(renderPrompt(generateASCIITable(classes_to_count)));
 
 
   tf.engine().endScope(); // end of scoping

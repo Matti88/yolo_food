@@ -12,16 +12,18 @@ const App = () => {
   const [loading, setLoading] = useState({ loading: true, progress: 0 }); // loading state
   const [model, setModel] = useState({
     net: null,
+
+
+
+
     inputShape: [1, 0, 0, 3],
   }); // init model & input shape
   const [prompt, setPrompt] = useState('');
 
   // references
   const imageRef = useRef(null);
-  const cameraRef = useRef(null);
-  const videoRef = useRef(null);
   const canvasRef = useRef(null);
-  const promptRef = useRef(null);
+
 
   // callback
   const detectCallback = (updatedPrompt) => {
