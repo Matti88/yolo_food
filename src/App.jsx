@@ -29,13 +29,12 @@ const App = () => {
   const AVERAGE_OBJECT_AREA = 600; // Replace with the actual average area of an object
 
 
-  const estimateObjectCountByClass = (objects) => { 
+  const estimateObjectCountByClass = (stream) => { 
     // Create an object to store the count for each class
     const classCountMap = {};
   
-    // Iterate through the array of objects
-    for (const obj of objects) {
-      
+    // Iterate through the array of stream
+    for (const obj of stream) {
       
       // Calculate the area of the bounding box
       const [y1, x1, y2, x2] = obj.box;
@@ -136,7 +135,7 @@ const App = () => {
       {loading.loading && <Loader>Loading model... {(loading.progress * 100).toFixed(2)}%</Loader>}
 
       <div className="header">
-        <h1>🥗 Make ma a Recipe with AI 🍝</h1>
+        <h1>🥗 Make me a Recipe with AI 🍝</h1>
         <p>
           Detect the food on your fridge ❄️ or dispensery 🫙 and gather ideas on what you can prepare for dinner 💡
         </p>
