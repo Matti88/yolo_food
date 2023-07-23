@@ -11,7 +11,7 @@ import ButtonHandlerStream from "./components/ButtonHandlerStream";
 import _, { isNull } from "lodash";
 import labels from "./utils/labels.json";
 import {findConsecutiveSimilarArrays} from "./utils/similarityWindow.js";
-
+import AdSense from './components/AdSense';
 
 
 
@@ -140,7 +140,10 @@ const App = () => {
   return (
     <div>
     <div className="App">
+ 
       {loading.loading && <Loader>Loading model... {(loading.progress * 100).toFixed(2)}%</Loader>}
+
+      <AdSense client="7561589033942142" />
 
       <div className="header">
         <h1>🥗 Make me a Recipe with AI 🍝</h1>
