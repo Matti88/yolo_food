@@ -5,6 +5,7 @@ import {
 import labels from "./labels.json";
 
 const numClass = labels.length;
+const ACCEPTANCE_DETECTION = 0.5;
 
 /**
  * Render into an ASCII Table the data collected
@@ -165,7 +166,9 @@ export const detect = async (source, model, canvasRef, callbacks = []) => {
     return [rawScores.max(1), rawScores.argMax(1)];
   }); // get max scores and classes index
 
-  const nms = await tf.image.nonMaxSuppressionAsync(boxes, scores, 500, 0.45, 0.2); // NMS to filter boxes
+
+
+  const nms = await tf.image.nonMaxSuppressionAsync(boxes, scores, 500, 0.45, ACCEPTANCE_DETECTION); // NMS to filter boxes
 
   const boxes_data = boxes.gather(nms, 0).dataSync(); // indexing boxes by nms index
   const scores_data = scores.gather(nms, 0).dataSync(); // indexing scores by nms index

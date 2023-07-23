@@ -31,8 +31,8 @@ const App = () => {
   const canvasRef = useRef(null);
 
   const CONSECUTIVE_DETECTION = 3;
-  const CALLBACK_THROTTOL_IN_MS = 300;
-
+  const CALLBACK_THROTTOL_IN_MS = 400;
+  const THRESHOLD_ACCEPTANCE = 0.5;
 
   
   // callback for the Image
@@ -42,7 +42,7 @@ const App = () => {
 
   // callback for the stream 
   const detectCallbackStream = (classes_data, boxes_data, scores_data ) => {
-    const threshold = 0.1
+    const threshold = THRESHOLD_ACCEPTANCE;
     // Filter objects based on the threshold
     const filteredObjects = [];
     for (let i = 0; i < scores_data.length; i++) {
@@ -76,14 +76,11 @@ const App = () => {
   // function for estimating the stream 
   const estimateObjectCountByClass = (stream) => { 
     // Create an object to store the count for each class
-    console.log(stream);
     const finding_first_good_result = findConsecutiveSimilarArrays(stream, CONSECUTIVE_DETECTION);
     if(_.isNull(finding_first_good_result)){
       return {}
     }
     const transformed_to_array_items = finding_first_good_result.map((obj) => obj.class )
-    console.log(transformed_to_array_items);
-    console.log("Above is the single result extracted by the stream");
     return transformed_to_array_items;
   };
   
