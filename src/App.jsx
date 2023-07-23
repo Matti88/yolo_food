@@ -3,13 +3,17 @@ import * as tf from "@tensorflow/tfjs";
 import "@tensorflow/tfjs-backend-webgl"; // set backend to webgl
 import Loader from "./components/loader";
 import ButtonHandler from "./components/btn-handler";
-import {  detectVideo , detectImage, renderFinalPromptCallback, generateASCIITable} from "./utils/detect";
+import {  detectVideo , detectImage, renderFinalPromptCallback, generateASCIITable, transformPredictionToSummary} from "./utils/detect";
 import "./style/App.css";
 import CopyableTextArea from "./components/CopiableTextArea";
 import WhatsAppShareLink from "./components/WhatAppShareLink";
 import ButtonHandlerStream from "./components/ButtonHandlerStream";
-import _ from "lodash";
+import _, { isNull } from "lodash";
 import labels from "./utils/labels.json";
+import {findConsecutiveSimilarArrays} from "./utils/similarityWindow.js";
+
+
+
 
 const App = () => {
  
@@ -26,40 +30,11 @@ const App = () => {
   const cameraRef = useRef(null);
   const canvasRef = useRef(null);
 
-  const AVERAGE_OBJECT_AREA = 600; // Replace with the actual average area of an object
+  const CONSECUTIVE_DETECTION = 3;
+  const CALLBACK_THROTTOL_IN_MS = 300;
 
 
-  const estimateObjectCountByClass = (stream) => { 
-    // Create an object to store the count for each class
-    const classCountMap = {};
   
-    // Iterate through the array of stream
-    for (const obj of stream) {
-      
-      // Calculate the area of the bounding box
-      const [y1, x1, y2, x2] = obj.box;
-      const area = Math.abs((x2 - x1) * (y2 - y1));
-
-  
-      // Update the count for the corresponding class
-      if (classCountMap[obj.class]) {
-        classCountMap[obj.class] += area;
-      } else {
-        classCountMap[obj.class] = area;
-      }
-    }
-  
-  // Create an object with the class as the property name and rounded estimated count as the property value
-  const estimatedCounts = {};
-  for (const [classId, area] of Object.entries(classCountMap)) {
-    estimatedCounts[labels[classId]] = Math.round(area / AVERAGE_OBJECT_AREA); // Rounded to the nearest integer
-  }
-     
-    return estimatedCounts;
-  };
-  
-  
-
   // callback for the Image
   const detectCallbackImage = (updatedPrompt) => { 
     setPrompt(renderFinalPromptCallback(updatedPrompt));
@@ -80,26 +55,62 @@ const App = () => {
       }
     }
     
-    // Update the streamFood state with the latest filteredObjects
-    setStreamFood((prevStreamFood) => [...prevStreamFood, ...filteredObjects]);
+    if(filteredObjects.length> 0){
+
+      if (streamFood.length >200)
+      {
+        // Update the streamFood state with the latest filteredObjects
+        setStreamFood((prevStreamFood) => [...prevStreamFood.slice(50), filteredObjects]);        
+      }
+      else
+      {
+        // Update the streamFood state with the latest filteredObjects
+        setStreamFood((prevStreamFood) => [...prevStreamFood, filteredObjects]);
+
+      }
+
+    }
 
   };
 
+  // function for estimating the stream 
+  const estimateObjectCountByClass = (stream) => { 
+    // Create an object to store the count for each class
+    console.log(stream);
+    const finding_first_good_result = findConsecutiveSimilarArrays(stream, CONSECUTIVE_DETECTION);
+    if(_.isNull(finding_first_good_result)){
+      return {}
+    }
+    const transformed_to_array_items = finding_first_good_result.map((obj) => obj.class )
+    console.log(transformed_to_array_items);
+    console.log("Above is the single result extracted by the stream");
+    return transformed_to_array_items;
+  };
+  
   // callback for the stream 
   const detectCallbackStreamEnd = () => {
     // Update the streamFood state with the latest filteredObjects
     if (streamFood.length>0) {
+      
       const ObjectIngredientCount = estimateObjectCountByClass(streamFood);
-      const generatedGroceryInventory = generateASCIITable(ObjectIngredientCount);
-      setPrompt(generatedGroceryInventory);
-      setStreamFood([]);
+      const final_prompt = renderFinalPromptCallback(ObjectIngredientCount);
+      if (ObjectIngredientCount.length === 0){
+        setPrompt("");        
+      }
+      else {
+        setPrompt(final_prompt);
+      }
+
+      // cancelling the previous stream
+      setStreamFood([])
+
     }
 
   };
   
 
     // Apply throttle to the detectCallbackStream function to decrease its frequency
-  const throttledDetectCallback = _.throttle(detectCallbackStream, 500); // Adjust the throttle interval (e.g., 1000ms = 1 second)
+  const throttledDetectCallback = _.throttle(detectCallbackStream, CALLBACK_THROTTOL_IN_MS); // Adjust the throttle interval (e.g., 1000ms = 1 second)
 
   // model configsz```
   const modelName = "yolov8n";
@@ -185,3 +196,4 @@ const App = () => {
 };
 
 export default App;
+
