@@ -143,7 +143,7 @@ const App = () => {
  
       {loading.loading && <Loader>Loading model... {(loading.progress * 100).toFixed(2)}%</Loader>}
 
-      <AdSense client="7561589033942142" />
+      <AdSense client="ca-pub-7561589033942142" />
 
       <div className="header">
         <h1>🥗 Make me a Recipe with AI 🍝</h1>
