@@ -190,7 +190,7 @@ const App = () => {
         <footer className="footer">
         <p>Made for saving 💸 by Matteo Montanari and Marco Pelletta</p>
         <p><a href="mailto:matteo.montanari25@gmail.com">Contact Us</a></p>
-        <p><a href="public/PrivacyPolicy.html">Privacy Policy</a></p>
+        <p><a href="/PrivacyPolicy.html">Privacy Policy</a></p>
         </footer>
     </div>
   );
