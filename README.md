@@ -23,8 +23,8 @@ The steps are the following:
 **Setup**
 
 ```bash
-git clone https://github.com/Matti88/yolo_food.git
-cd yolo_food
+git clone https://github.com/Matti88/yolo_recipe.git
+cd yolo_recipe
 yarn install #Install dependencies
 ```
 
